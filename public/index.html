@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c0c10" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>SignBridge – Speech & Sign Language Bridge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon" aria-hidden="true">🤟</span>
+        <h1>SignBridge</h1>
+      </div>
+      <div id="user-bar" class="user-bar">
+        <span id="user-name" class="user-name"></span>
+        <button type="button" id="logout-btn" class="btn btn-secondary" hidden>Log out</button>
+      </div>
+    </div>
+    <p class="tagline">Real-time Speech ↔ Sign Language for everyone</p>
+  </header>
+
+  <main class="main">
+    <!-- Speech-to-Sign Section -->
+    <section class="panel speech-to-sign-panel" aria-labelledby="speech-heading">
+      <h2 id="speech-heading" class="panel-title">
+        <span class="panel-icon">🎤</span>
+        Speech → Sign
+      </h2>
+      <div class="speech-controls">
+        <button type="button" id="mic-btn" class="btn btn-primary" aria-label="Start microphone">
+          <span class="btn-icon">🎤</span>
+          <span class="btn-text">Start listening</span>
+        </button>
+        <div class="playback-controls">
+          <button type="button" id="pause-btn" class="btn btn-secondary" disabled aria-label="Pause">Pause</button>
+          <button type="button" id="stop-btn" class="btn btn-secondary" disabled aria-label="Stop">Stop</button>
+        </div>
+      </div>
+      <div class="waveform-container">
+        <canvas id="waveform" class="waveform" aria-hidden="true"></canvas>
+      </div>
+      <div class="transcript-section">
+        <p class="label">Transcribed text</p>
+        <div id="transcript" class="transcript-box" aria-live="polite"></div>
+      </div>
+      <div class="asl-section">
+        <p class="label">ASL representation</p>
+        <div id="asl-display" class="asl-display" aria-live="polite">
+          <div id="asl-letters" class="asl-letters"></div>
+          <div id="asl-spelling-hint" class="asl-hint">Speech will appear as finger-spelled ASL here.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sign-to-Text Section -->
+    <section class="panel sign-to-text-panel" aria-labelledby="sign-heading">
+      <div class="sign-panel-header">
+        <h2 id="sign-heading" class="panel-title">
+          <span class="panel-icon">✋</span>
+          Sign → Text
+        </h2>
+        <p class="sign-panel-hint">Hold your hand clearly in frame. For best results, train the model below (record 15 samples per letter for each letter you use).</p>
+      </div>
+      <div class="sign-controls">
+        <button type="button" id="webcam-btn" class="btn btn-primary" aria-label="Start webcam">
+          <span class="btn-icon">📷</span>
+          <span class="btn-text">Start camera</span>
+        </button>
+      </div>
+      <div class="train-model-section">
+        <p class="label">Train model (improves accuracy)</p>
+        <p class="train-hint">Record 15 samples per letter. Hold the sign steady while recording.</p>
+        <div class="train-controls">
+          <label for="train-letter" class="sr-only">Letter to train</label>
+          <select id="train-letter" class="train-select" aria-label="Letter to train">
+            <option value="">Select letter</option>
+          </select>
+          <button type="button" id="train-record-btn" class="btn btn-secondary" disabled>Record 15 samples</button>
+          <button type="button" id="train-clear-btn" class="btn btn-secondary">Clear training</button>
+        </div>
+        <p id="train-status" class="train-status">No model trained. Record samples for at least 2 letters.</p>
+      </div>
+      <div class="video-section">
+        <div class="video-wrapper">
+          <video id="webcam-video" class="webcam-video" playsinline muted autoplay></video>
+          <canvas id="webcam-canvas" class="webcam-canvas"></canvas>
+          <p id="webcam-placeholder" class="webcam-placeholder">Start camera to see your hands</p>
+        </div>
+        <div class="sign-output">
+          <div class="sign-output-card">
+            <p class="label">Current letter</p>
+            <div class="current-letter-wrap">
+              <span id="current-letter" class="current-letter" aria-live="polite">—</span>
+              <div class="confidence-bar-wrap">
+                <div id="confidence-bar" class="confidence-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+            <p class="label">Recognized text</p>
+            <div id="sign-text" class="sign-text-box" aria-live="polite">—</div>
+            <p id="sign-confidence" class="confidence">Confidence: —</p>
+          </div>
+          <button type="button" id="add-sign-to-chat-btn" class="btn btn-secondary btn-add-chat">Add to chat</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dual-Mode Chat -->
+    <section class="panel chat-panel" aria-labelledby="chat-heading">
+      <h2 id="chat-heading" class="panel-title">
+        <span class="panel-icon">💬</span>
+        Chat
+      </h2>
+      <div class="chat-toolbar">
+        <button type="button" id="copy-chat-btn" class="btn btn-secondary">Copy conversation</button>
+        <button type="button" id="share-chat-btn" class="btn btn-secondary">Share</button>
+      </div>
+      <div class="chat-split">
+        <div class="chat-column chat-left">
+          <h3 class="chat-column-title">Speech → Sign</h3>
+          <div id="chat-speech" class="chat-messages"></div>
+        </div>
+        <div class="chat-column chat-right">
+          <h3 class="chat-column-title">Sign → Text</h3>
+          <div id="chat-sign" class="chat-messages"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c0c10" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>Register – SignBridge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="logo">
+        <span class="logo-icon" aria-hidden="true">🤟</span>
+        <h1>SignBridge</h1>
+      </div>
+      <h2>Create account</h2>
+      <p class="sub">Register to save your chat history</p>
+      <div id="auth-error" class="auth-error" role="alert"></div>
+      <form id="register-form" class="auth-form">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" autocomplete="name" placeholder="Your name" />
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required autocomplete="email" placeholder="you@example.com" />
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required autocomplete="new-password" placeholder="At least 6 characters" minlength="6" />
+        <label for="confirm">Confirm password</label>
+        <input type="password" id="confirm" name="confirm" required autocomplete="new-password" placeholder="••••••••" minlength="6" />
+        <button type="submit" class="btn btn-primary" id="submit-btn">Register</button>
+      </form>
+      <p class="auth-footer">Already have an account? <a href="/login">Sign in</a></p>
+    </div>
+  </div>
+  <script type="module" src="js/register.js"></script>
+</body>
+</html>
